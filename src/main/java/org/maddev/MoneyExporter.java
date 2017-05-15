@@ -49,9 +49,7 @@ public class MoneyExporter
         final List<Transaction> transactions = this.parseToTransactions();
         final String desktop = System.getProperty("user.home") + "/Desktop";
         final File file = new File(desktop + "/ExportedPayroll.qif");
-        if(file.exists()) {
-           file.delete();
-        }
+        file.delete();
         try
         {
             file.createNewFile();
@@ -59,15 +57,11 @@ public class MoneyExporter
             for(int i = 0; i < transactions.size(); i++)
             {
                 final Transaction trans = transactions.get(i);
+                System.out.println(trans.getNumber());
                 /**
                  * Skip the carrot if its the first transaction.
                  */
                 Files.write(file.toPath(), trans.toMoneyFormat(i == 0).getBytes(), StandardOpenOption.APPEND);
-            }
-            for (Transaction transaction : transactions)
-            {
-                transaction.toMoneyFormat(false);
-                Files.write(file.toPath(), transaction.toMoneyFormat(false).getBytes(), StandardOpenOption.APPEND);
             }
             Files.write(file.toPath(), "^".getBytes(), StandardOpenOption.APPEND);
         } catch (IOException e)
